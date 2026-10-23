@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#faf5f8">
+<title>kjh · 个人介绍</title>
+<style>
+  /* ===== 两种字体：标题用衬线（宋体系），正文用无衬线（黑体系） ===== */
+  :root{
+    --font-display: "Songti SC", "SimSun", "STSong", "宋体", Georgia, "Times New Roman", serif;
+    --font-text: "PingFang SC", "Microsoft YaHei", "微软雅黑", "Hiragino Sans GB", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+    /* 浅色主题：粉为底，蓝作呼应 */
+    --bg: #faf5f8;
+    --bg-soft: #f1e7ef;
+    --card: #fffbfe;
+    --card-2: #f8eef5;
+    --text: #241d2d;
+    --text-soft: #6d6076;
+    --line: #ead6e4;
+    --accent: #e0709b;
+    --accent-text: #b34b78;
+    --accent-soft: #fbe3ee;
+    --blue: #7c8ede;
+    --blue-text: #5668bf;
+    --blue-soft: #e7ebfb;
+    --shadow: 0 1px 2px rgba(60,32,52,.05), 0 12px 32px rgba(60,32,52,.08);
+    --ring: rgba(224,112,155,.24);
+  }
+  html[data-theme="dark"]{
+    --bg: #171420;
+    --bg-soft: #1e1a2a;
+    --card: #221d2e;
+    --card-2: #282237;
+    --text: #f1ebf4;
+    --text-soft: #b1a6bc;
+    --line: #383050;
+    --accent: #f3a1c0;
+    --accent-text: #ffc0d8;
+    --accent-soft: #3b2537;
+    --blue: #a8b6ff;
+    --blue-text: #c3ccff;
+    --blue-soft: #272c48;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 16px 40px rgba(0,0,0,.35);
+    --ring: rgba(243,161,192,.28);
+  }
+
+  *{ box-sizing: border-box; }
+  html{ -webkit-text-size-adjust: 100%; }
+  body{
+    margin: 0;
+    background:
+      radial-gradient(900px 480px at 88% -10%, var(--accent-soft), transparent 70%),
+      radial-gradient(760px 520px at -12% 34%, var(--blue-soft), transparent 72%),
+      var(--bg);
+    background-attachment: fixed;
+    color: var(--text);
+    font-family: var(--font-text);
+    font-size: 16px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color .35s ease, color .35s ease;
+    min-height: 100vh;
+  }
+  body::before{
+    content: "";
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 72px 72px;
+    opacity: .24;
+    pointer-events: none;
+    mask-image: radial-gradient(circle at 50% 0%, #000 0%, transparent 72%);
+    -webkit-mask-image: radial-gradient(circle at 50% 0%, #000 0%, transparent 72%);
+  }
+
+  .wrap{
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: clamp(18px, 4vw, 48px) clamp(16px, 4vw, 40px) 64px;
+  }
+
+  /* ===== 顶栏 ===== */
+  .topbar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: clamp(24px, 5vw, 48px);
+  }
+  .brand{
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font-display);
+    font-size: 15px;
+    letter-spacing: .18em;
+    color: var(--text-soft);
+    text-transform: uppercase;
+  }
+  .brand .dot{
+    width: 9px; height: 9px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--blue));
+    box-shadow: 0 0 0 4px var(--ring);
+  }
+
+  .theme-btn{
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: 44px;
+    padding: 0 16px;
+    font-family: var(--font-text);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: transform .15s ease, background-color .25s ease, border-color .25s ease, color .25s ease;
+  }
+  .theme-btn:hover{ border-color: var(--accent); transform: translateY(-1px); }
+  .theme-btn:active{ transform: translateY(0); }
+  .theme-btn:focus-visible{ outline: 3px solid var(--ring); outline-offset: 2px; }
+  .theme-btn svg{ width: 17px; height: 17px; flex: none; }
+  .theme-btn .icon-moon{ display: none; }
+  html[data-theme="dark"] .theme-btn .icon-sun{ display: none; }
+  html[data-theme="dark"] .theme-btn .icon-moon{ display: block; }
+
+  /* ===== 头部名片 ===== */
+  .hero{
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(20px, 4vw, 36px);
+    align-items: center;
+    padding-bottom: clamp(24px, 4vw, 40px);
+  }
+  .avatar{
+    --size: clamp(84px, 16vw, 120px);
+    position: relative;
+    width: var(--size); height: var(--size);
+    border-radius: 30% 70% 62% 38% / 42% 32% 68% 58%;
+    display: grid; place-items: center;
+    background: linear-gradient(145deg, var(--accent-soft), var(--blue-soft) 78%);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow), inset 0 0 0 6px var(--card);
+    font-family: var(--font-display);
+    font-size: clamp(34px, 7vw, 48px);
+    font-weight: 700;
+    color: var(--accent-text);
+    letter-spacing: .02em;
+    user-select: none;
+  }
+  .avatar::after{
+    content: "";
+    position: absolute; inset: -14px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, var(--accent), var(--blue));
+    filter: blur(22px);
+    opacity: .22;
+    z-index: -1;
+  }
+  .eyebrow{
+    margin: 0 0 6px;
+    font-size: 13px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+  }
+  h1{
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(38px, 9vw, 68px);
+    line-height: 1.08;
+    font-weight: 700;
+    letter-spacing: .01em;
+  }
+  h1 small{
+    display: block;
+    margin-top: 8px;
+    font-family: var(--font-text);
+    font-size: clamp(14px, 3.2vw, 17px);
+    font-weight: 400;
+    letter-spacing: .06em;
+    color: var(--text-soft);
+  }
+
+  .tags{
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 18px;
+    padding: 0; list-style: none;
+  }
+  .tags li{
+    font-size: 13px;
+    line-height: 1.4;
+    padding: 5px 12px;
+    border-radius: 999px;
+    color: var(--accent-text);
+    background: var(--accent-soft);
+    border: 1px solid var(--ring);
+    white-space: nowrap;
+  }
+  .tags li:nth-child(even){
+    color: var(--blue-text);
+    background: var(--blue-soft);
+    border-color: color-mix(in srgb, var(--blue) 24%, transparent);
+  }
+
+  /* ===== 栅格卡片 ===== */
+  .grid{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .card{
+    position: relative;
+    overflow: hidden;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: clamp(18px, 3.4vw, 28px);
+    box-shadow: var(--shadow);
+    transition: background-color .35s ease, border-color .35s ease, box-shadow .35s ease;
+  }
+  .card.wide{ grid-column: 1 / -1; }
+
+  .card h2{
+    display: flex; align-items: center; gap: 10px;
+    margin: 0 0 14px;
+    font-family: var(--font-display);
+    font-size: clamp(19px, 3.6vw, 23px);
+    font-weight: 700;
+    letter-spacing: .02em;
+  }
+  .card h2::before{
+    content: "";
+    width: 18px; height: 3px; flex: none;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--blue));
+  }
+  .label{
+    margin: 0 0 4px;
+    font-size: 12px;
+    letter-spacing: .2em;
+    color: var(--text-soft);
+  }
+  .card p{ margin: 0; color: var(--text); }
+  .card p + p{ margin-top: 10px; }
+  .muted{ color: var(--text-soft); }
+
+  /* 性格关键词 */
+  .chips{
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin: 16px 0 0;
+    padding: 0; list-style: none;
+  }
+  .chips li{
+    font-size: 12.5px;
+    line-height: 1.4;
+    padding: 4px 10px;
+    border-radius: 8px;
+    color: var(--blue-text);
+    background: var(--blue-soft);
+    border: 1px solid color-mix(in srgb, var(--blue) 22%, transparent);
+    white-space: nowrap;
+  }
+
+  /* 爱好：律动条 */
+  .eq{
+    display: flex;
+    align-items: flex-end;
+    gap: 5px;
+    height: 64px;
+    margin-top: 22px;
+    padding: 0 2px;
+  }
+  .eq span{
+    flex: 1;
+    height: var(--h, 40%);
+    border-radius: 6px;
+    background: linear-gradient(180deg, var(--accent), var(--blue));
+    opacity: .85;
+    animation: beat 2.2s ease-in-out var(--d, 0s) infinite alternate;
+  }
+  .eq-note{
+    display: flex; justify-content: space-between; gap: 12px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-soft);
+  }
+
+  /* 自我认可进度 */
+  .meter{
+    --pct: 42%;
+    margin-top: 20px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .meter > span{
+    display: block; height: 100%;
+    width: var(--pct);
+    min-width: 10px;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--accent), var(--blue));
+  }
+  .meter-note{
+    display: flex; justify-content: space-between; gap: 12px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-soft);
+  }
+
+  /* 生活习惯列表 */
+  ol.habits{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: habit;
+    display: grid;
+    gap: 12px;
+  }
+  ol.habits li{
+    counter-increment: habit;
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+    padding: 14px 16px;
+    background: var(--card-2);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    transition: background-color .35s ease, border-color .35s ease;
+  }
+  ol.habits li::before{
+    content: counter(habit, decimal-leading-zero);
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--accent-text);
+    line-height: 1.5;
+  }
+  ol.habits strong{
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+  }
+  ol.habits span{ color: var(--text); }
+  ol.habits small{ color: var(--text-soft); font-size: 14px; }
+
+  /* 引用卡 */
+  .quote{
+    background:
+      linear-gradient(135deg, var(--accent-soft), var(--blue-soft));
+    border-color: transparent;
+  }
+  .quote::before{
+    content: "“";
+    position: absolute;
+    top: -26px; right: 18px;
+    font-family: var(--font-display);
+    font-size: 150px;
+    line-height: 1;
+    color: var(--accent);
+    opacity: .16;
+    pointer-events: none;
+  }
+  .quote h2{
+    margin-bottom: 12px;
+    font-family: var(--font-text);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .2em;
+    color: var(--text-soft);
+  }
+  .quote h2::before{ display: none; }
+  .quote blockquote{
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(21px, 4.2vw, 28px);
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: .02em;
+    color: var(--text);
+  }
+  .quote p{
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--text-soft);
+  }
+
+  /* 页脚 */
+  footer{
+    margin-top: 32px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    display: flex; flex-wrap: wrap; gap: 8px 20px;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-soft);
+  }
+
+  /* ===== 动画 ===== */
+  @keyframes beat{
+    from{ height: calc(var(--h, 40%) * .4); }
+    to{ height: var(--h, 40%); }
+  }
+
+  /* ===== 窄屏 ===== */
+  @media (max-width: 640px){
+    body{ font-size: 15.5px; line-height: 1.8; }
+    .hero{ grid-template-columns: 1fr; justify-items: start; gap: 18px; }
+    .grid{ grid-template-columns: 1fr; }
+    .card{ border-radius: 16px; }
+    ol.habits li{ grid-template-columns: 30px minmax(0, 1fr); padding: 13px 14px; }
+    .brand{ letter-spacing: .12em; font-size: 13px; }
+    .theme-btn{ padding: 0 14px; }
+    footer{ flex-direction: column; }
+  }
+  @media (max-width: 360px){
+    .wrap{ padding-left: 12px; padding-right: 12px; }
+    .theme-btn span{ display: none; }
+    .theme-btn{ padding: 0 12px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="topbar">
+    <div class="brand"><span class="dot" aria-hidden="true"></span>KJH · 个人介绍</div>
+    <button class="theme-btn" id="themeBtn" type="button" aria-pressed="false" aria-label="切换深色主题" title="切换深浅主题">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.2"></circle>
+        <path d="M12 2.6v2.2M12 19.2v2.2M4.2 12H2M22 12h-2.2M5.5 5.5 7 7M17 17l1.5 1.5M18.5 5.5 17 7M7 17l-1.5 1.5"></path>
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20.5 14.4A8.6 8.6 0 0 1 9.6 3.5a8.6 8.6 0 1 0 10.9 10.9Z"></path>
+      </svg>
+      <span id="themeText">深色模式</span>
+    </button>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="name">
+      <div class="avatar" aria-hidden="true">K</div>
+      <div>
+        <p class="eyebrow">Personal Profile</p>
+        <h1 id="name">kjh
+          <small>敏感而外向 · 在音乐与日常里认真生活</small>
+        </h1>
+        <ul class="tags">
+          <li>敏感</li>
+          <li>外向</li>
+          <li>听音乐</li>
+          <li>早起运动</li>
+          <li>饺子爱好者</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="card" aria-labelledby="t1">
+        <p class="label">性格底色</p>
+        <h2 id="t1">敏感，但一直向外走</h2>
+        <p>比较容易感知情绪，也比较愿意向人靠近——敏感，但整体是偏外向的。</p>
+        <p>偶尔会先想到不太好的结果，是有点悲观的人；不过悲观归悲观，从没打算放弃。</p>
+        <ul class="chips">
+          <li>渴望成功</li>
+          <li>不轻言放弃</li>
+          <li>想更认可自己</li>
+        </ul>
+        <div class="meter" role="img" aria-label="自我认可程度：正在慢慢积累">
+          <span></span>
+        </div>
+        <div class="meter-note"><span>自我认可</span><span>慢慢积累 · 不必满分</span></div>
+      </section>
+
+      <section class="card" aria-labelledby="t2">
+        <p class="label">爱好</p>
+        <h2 id="t2">听音乐</h2>
+        <p>耳机一戴，世界就有了自己的背景音。音乐是放松，也是把情绪慢慢放下的方式。</p>
+        <p class="muted">不挑场合，也不需要理由，想听的时候就听一会儿。</p>
+        <div class="eq" aria-hidden="true">
+          <span style="--h:38%;--d:-.2s"></span>
+          <span style="--h:62%;--d:-.7s"></span>
+          <span style="--h:48%;--d:-1.1s"></span>
+          <span style="--h:80%;--d:-.4s"></span>
+          <span style="--h:55%;--d:-1.5s"></span>
+          <span style="--h:92%;--d:-.9s"></span>
+          <span style="--h:44%;--d:-1.8s"></span>
+          <span style="--h:70%;--d:-.3s"></span>
+          <span style="--h:52%;--d:-1.3s"></span>
+          <span style="--h:86%;--d:-.6s"></span>
+          <span style="--h:40%;--d:-1.6s"></span>
+          <span style="--h:66%;--d:-1s"></span>
+          <span style="--h:50%;--d:-.5s"></span>
+          <span style="--h:74%;--d:-1.4s"></span>
+        </div>
+        <div class="eq-note"><span>此刻循环中</span><span>音量刚好</span></div>
+      </section>
+
+      <section class="card wide" aria-labelledby="t3">
+        <p class="label">生活习惯</p>
+        <h2 id="t3">简单、重复，也挺踏实</h2>
+        <ol class="habits">
+          <li>
+            <span>
+              <strong>状态好的早上，先动起来</strong>
+              <small>早起运动，把一天里最清醒的那段时间先交给身体。</small>
+            </span>
+          </li>
+          <li>
+            <span>
+              <strong>每天都要有一点运动量</strong>
+              <small>不追求强度，但坚持不断线，让身体保持在自己的节奏里。</small>
+            </span>
+          </li>
+          <li>
+            <span>
+              <strong>饺子是默认答案</strong>
+              <small>不到饿得肚子不舒服，基本都吃饺子。</small>
+            </span>
+          </li>
+        </ol>
+      </section>
+
+      <section class="card wide quote" aria-labelledby="t4">
+        <h2 id="t4">一句话自述</h2>
+        <blockquote>悲观是底色，不放弃是选择。</blockquote>
+        <p>会怀疑自己，也会继续往前走；渴望被认可，但更想先做出点让自己认可的事。</p>
+      </section>
+    </div>
+
+    <footer>
+      <span>资料整理自《kjh的个人介绍》</span>
+      <span>本页可离线打开 · 无外部资源</span>
+    </footer>
+  </main>
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('themeBtn');
+  var text = document.getElementById('themeText');
+  var STORE = 'kjh-intro-theme';
+
+  function apply(theme) {
+    root.setAttribute('data-theme', theme);
+    var dark = theme === 'dark';
+    btn.setAttribute('aria-pressed', String(dark));
+    btn.setAttribute('aria-label', dark ? '切换浅色主题' : '切换深色主题');
+    text.textContent = dark ? '浅色模式' : '深色模式';
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute('name', 'theme-color');
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute('content', dark ? '#171420' : '#faf5f8');
+  }
+
+  var saved = null;
+  try { saved = localStorage.getItem(STORE); } catch (e) {}
+  var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  apply(saved === 'dark' || saved === 'light' ? saved : (prefersDark ? 'dark' : 'light'));
+
+  btn.addEventListener('click', function () {
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    apply(next);
+    try { localStorage.setItem(STORE, next); } catch (e) {}
+  });
+})();
+</script>
+</body>
+</html>
